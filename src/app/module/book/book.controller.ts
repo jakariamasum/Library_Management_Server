@@ -6,7 +6,7 @@ import { BookServices } from "./book.service";
 const createBook = catchAsync(async (req, res) => {
   const result = await BookServices.createBookIntoDB(req.body);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(500, "Failed to create the book. Please try again.");
   }
 
   sendResponse(res, {
@@ -19,7 +19,7 @@ const createBook = catchAsync(async (req, res) => {
 const getAllBooks = catchAsync(async (req, res) => {
   const result = await BookServices.getAllBooksFromDB();
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "No books found.");
   }
 
   sendResponse(res, {
@@ -33,7 +33,7 @@ const getSingleBook = catchAsync(async (req, res) => {
   const { bookId } = req.params;
   const result = await BookServices.getSingleBookFromDB(bookId);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "Book not found.");
   }
 
   sendResponse(res, {
@@ -47,7 +47,7 @@ const updateBook = catchAsync(async (req, res) => {
   const { bookId } = req.params;
   const result = await BookServices.updateBookIntoDB(bookId, req.body);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "Book not found.");
   }
 
   sendResponse(res, {
@@ -61,7 +61,7 @@ const deleteBooks = catchAsync(async (req, res) => {
   const { bookId } = req.params;
   const result = await BookServices.deleteBookFromDB(bookId);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "Book not found.");
   }
 
   sendResponse(res, {
