@@ -15,6 +15,7 @@ model Book {
   publishedYear Int 
   totalCopies Int
   availableCopies Int 
+  borrowRecords BorrowRecord[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -25,6 +26,17 @@ model Member {
   email String @unique
   phone String
   membershipDate DateTime
+  borrowRecords BorrowRecord[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model BorrowRecord {
+  borrowId String @id @default(uuid())
+  borrowDate DateTime 
+  returnDate DateTime 
+  bookId String
+  memberId String
+  book   Book   @relation(fields: [bookId], references: [bookId])
+  member Member @relation(fields: [memberId], references: [memberId])
 }
