@@ -7,7 +7,7 @@ const returnBook = catchAsync(async (req, res) => {
   const { borrowId } = req.body;
   const result = await ReturnServices.returnBookFromDB(borrowId);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "Book not found.");
   }
 
   sendResponse(res, {

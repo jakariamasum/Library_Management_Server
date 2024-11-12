@@ -6,7 +6,7 @@ import { MemberServices } from "./member.service";
 const createMember = catchAsync(async (req, res) => {
   const result = await MemberServices.createMemberIntoDB(req.body);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(500, "Failed to create member. Please try again.");
   }
 
   sendResponse(res, {
@@ -19,7 +19,7 @@ const createMember = catchAsync(async (req, res) => {
 const getAllMembers = catchAsync(async (req, res) => {
   const result = await MemberServices.getAllMembersFromDB();
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "No members found.");
   }
 
   sendResponse(res, {
@@ -33,7 +33,7 @@ const getSingleMember = catchAsync(async (req, res) => {
   const { memberId } = req.params;
   const result = await MemberServices.getSingleMemberFromDB(memberId);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "Member not found.");
   }
 
   sendResponse(res, {
@@ -47,7 +47,7 @@ const updateMember = catchAsync(async (req, res) => {
   const { memberId } = req.params;
   const result = await MemberServices.updateMemberIntoDB(memberId, req.body);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "Member not found.");
   }
 
   sendResponse(res, {
@@ -61,7 +61,7 @@ const deleteMembers = catchAsync(async (req, res) => {
   const { memberId } = req.params;
   const result = await MemberServices.deleteMemberFromDB(memberId);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(404, "Member not found");
   }
 
   sendResponse(res, {

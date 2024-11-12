@@ -6,7 +6,10 @@ import { BorrowRecordServices } from "./borrow.service";
 const createBorrowRecord = catchAsync(async (req, res) => {
   const result = await BorrowRecordServices.createBorrowRecordIntoDB(req.body);
   if (!result) {
-    throw new AppError(404, "Something went wrong!");
+    throw new AppError(
+      500,
+      "Failed to create borrow record. Please try again."
+    );
   }
 
   sendResponse(res, {
