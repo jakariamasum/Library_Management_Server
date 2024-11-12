@@ -7,7 +7,6 @@ import AppError from "../errors/AppError";
 import handleDuplicateError from "../errors/handleDuplicateError";
 import handleZodError from "../errors/handleZodError";
 import { TErrorSources } from "../interface/error";
-import config from "../../config";
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.log(err.statusCode);
@@ -53,10 +52,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //ultimate return
   return res.status(statusCode).json({
     success: false,
+    status: statusCode,
     message,
-    errorSources,
-    err,
-    stack: config.NODE_ENV === "development" ? err?.stack : null,
   });
 };
 
