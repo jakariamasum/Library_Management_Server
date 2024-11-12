@@ -8,19 +8,20 @@ type TMeta = {
 };
 
 type TResponse<T> = {
-  statusCode: number;
+  status: number;
   success: boolean;
   message?: string;
   meta?: TMeta;
-  data: T;
+  data?: T;
 };
 
 const sendResponse = <T>(res: Response, data: TResponse<T>) => {
-  res.status(data?.statusCode).json({
+  res.status(data?.status).json({
     success: data.success,
+    status: data.status,
     message: data.message,
-    meta: data.meta,
     data: data.data,
+    meta: data.meta,
   });
 };
 
