@@ -18,3 +18,13 @@ model Book {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Member {
+  memberId String @id @default(uuid())
+  name String
+  email String @unique
+  phone String
+  membershipDate DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
