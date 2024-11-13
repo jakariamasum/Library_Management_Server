@@ -4,7 +4,6 @@ import { IBook } from "./book.interface";
 const prisma = new PrismaClient();
 
 const createBookIntoDB = async (payload: IBook) => {
-  console.log(payload);
   const newBook = await prisma.book.create({
     data: payload,
   });
@@ -26,6 +25,14 @@ const getSingleBookFromDB = async (id: string) => {
 };
 
 const updateBookIntoDB = async (id: string, payload: Partial<IBook>) => {
+  // Throws an error if the book is not found
+  await prisma.book.findUniqueOrThrow({
+    where: {
+      bookId: id,
+    },
+  });
+
+  // update the book
   const updatedBook = await prisma.book.update({
     where: {
       bookId: id,
@@ -38,12 +45,26 @@ const updateBookIntoDB = async (id: string, payload: Partial<IBook>) => {
 };
 
 const deleteBookFromDB = async (id: string) => {
-  const deletedBook = await prisma.book.delete({
-    where: {
-      bookId: id,
-    },
+  return await prisma.$transaction(async (transaction) => {
+    // Throws an error if the book is not found
+    await transaction.book.findUniqueOrThrow({
+      where: {
+        bookId: id,
+      },
+    });
+
+    // delete all borrow record associated with that book
+    await transaction.borrowRecord.deleteMany({
+      where: { bookId: id },
+    });
+
+    // delete the book
+    const deletedBook = await transaction.book.delete({
+      where: { bookId: id },
+    });
+
+    return deletedBook;
   });
-  return deletedBook;
 };
 
 export const BookServices = {

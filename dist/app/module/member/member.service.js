@@ -40,12 +40,15 @@ const updateMemberIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, fu
     return updatedMember;
 });
 const deleteMemberFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const deletedMember = yield prisma.member.delete({
-        where: {
-            memberId: id,
-        },
-    });
-    return deletedMember;
+    return yield prisma.$transaction((transaction) => __awaiter(void 0, void 0, void 0, function* () {
+        yield transaction.borrowRecord.deleteMany({
+            where: { memberId: id },
+        });
+        const deletedMember = yield transaction.member.delete({
+            where: { memberId: id },
+        });
+        return deletedMember;
+    }));
 });
 exports.MemberServices = {
     createMemberIntoDB,

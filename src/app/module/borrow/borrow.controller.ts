@@ -20,6 +20,25 @@ const createBorrowRecord = catchAsync(async (req, res) => {
   });
 });
 
+const updateBorrowRecord = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { borrowDate } = req.body;
+  const result = await BorrowRecordServices.updateBorrowRecordIntoDB(
+    id,
+    borrowDate
+  );
+  if (!result) {
+    throw new AppError(404, "Record not found.");
+  }
+
+  sendResponse(res, {
+    success: true,
+    status: 200,
+    message: "Record updated successfully",
+    data: result,
+  });
+});
+
 const getOverdueBorrowList = catchAsync(async (req, res) => {
   const overdueList = await BorrowRecordServices.getOverDueBorrowListFromDB();
 
@@ -37,4 +56,5 @@ const getOverdueBorrowList = catchAsync(async (req, res) => {
 export const BorrowRecordControllers = {
   createBorrowRecord,
   getOverdueBorrowList,
+  updateBorrowRecord,
 };

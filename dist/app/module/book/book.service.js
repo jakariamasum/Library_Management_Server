@@ -41,12 +41,15 @@ const updateBookIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, func
     return updatedBook;
 });
 const deleteBookFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const deletedBook = yield prisma.book.delete({
-        where: {
-            bookId: id,
-        },
-    });
-    return deletedBook;
+    return yield prisma.$transaction((transaction) => __awaiter(void 0, void 0, void 0, function* () {
+        yield transaction.borrowRecord.deleteMany({
+            where: { bookId: id },
+        });
+        const deletedBook = yield transaction.book.delete({
+            where: { bookId: id },
+        });
+        return deletedBook;
+    }));
 });
 exports.BookServices = {
     createBookIntoDB,
